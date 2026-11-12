@@ -1,9 +1,22 @@
-import { pgTable, uuid, varchar, text, integer, boolean, numeric, timestamp, jsonb } from "drizzle-orm/pg-core";
+import {
+  pgTable,
+  uuid,
+  varchar,
+  text,
+  integer,
+  boolean,
+  numeric,
+  timestamp,
+  jsonb,
+  doublePrecision,
+} from "drizzle-orm/pg-core";
 import { providers } from "./provider.schema";
 
 export const emergencyResources = pgTable("animal_emergency_resources", {
   id: uuid("id").defaultRandom().primaryKey(),
-  providerId: uuid("provider_id").references(() => providers.id, { onDelete: "cascade" }),
+  providerId: uuid("provider_id").references(() => providers.id, {
+    onDelete: "cascade",
+  }),
   city: varchar("city", { length: 100 }).notNull(),
   resourceType: varchar("resource_type", { length: 50 }).notNull(), // ambulance | oxygen_incubator | trauma_theatre | blood_unit | icu_bed
   label: varchar("label", { length: 140 }).notNull(),
@@ -11,7 +24,9 @@ export const emergencyResources = pgTable("animal_emergency_resources", {
   available: integer("available").notNull().default(0),
   bloodGroup: varchar("blood_group", { length: 8 }),
   isDemoData: boolean("is_demo_data").notNull().default(true),
-  updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
 });
 
 export const emergencyRequests = pgTable("animal_emergency_requests", {
@@ -25,9 +40,11 @@ export const emergencyRequests = pgTable("animal_emergency_requests", {
   symptoms: jsonb("symptoms").$type<string[]>().notNull().default([]),
   description: text("description"),
   address: text("address").notNull(),
-  latitude: numeric("latitude", { precision: 10, scale: 7 }),
-  longitude: numeric("longitude", { precision: 10, scale: 7 }),
+  latitude: doublePrecision("latitude"),
+  longitude: doublePrecision("longitude"),
   status: varchar("status", { length: 30 }).notNull().default("received"),
   isDemoRequest: boolean("is_demo_request").notNull().default(true),
-  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
 });

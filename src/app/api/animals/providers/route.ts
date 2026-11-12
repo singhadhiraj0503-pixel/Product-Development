@@ -6,11 +6,16 @@ import { providerCreateSchema } from "@/features/animals/schemas/provider.schema
 
 export async function GET(request: NextRequest) {
   try {
-    const result = await searchProviders(Object.fromEntries(request.nextUrl.searchParams));
+    const result = await searchProviders(
+      Object.fromEntries(request.nextUrl.searchParams),
+    );
     return NextResponse.json(result, { status: result.success ? 200 : 400 });
   } catch (error) {
     console.error("GET /animals/providers", error);
-    return NextResponse.json({ success: false, message: "Unable to fetch providers" }, { status: 500 });
+    return NextResponse.json(
+      { success: false, message: "Unable to fetch providers" },
+      { status: 500 },
+    );
   }
 }
 
@@ -18,11 +23,34 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const parsed = providerCreateSchema.safeParse(await request.json());
-    if (!parsed.success) return NextResponse.json({ success: false, errors: parsed.error.flatten() }, { status: 400 });
-    const [provider] = await db.insert(providers).values({ ...parsed.data, status: "pending", verificationStatus: "pending" }).returning();
-    return NextResponse.json({ success: true, data: provider }, { status: 201 });
+    if (!parsed.success)
+      return NextResponse.json(
+        { success: false, errors: parsed.error.flatten() },
+        { status: 400 },
+      );
+    const [provider] = await db
+      .insert(providers)
+      .values({
+        ...parsed.data,
+
+        // PostgreSQL numeric columns are represented as strings by Drizzle
+        latitude: parsed.data.latitude?.toString(),
+        longitude: parsed.data.longitude?.toString(),
+        consultationFee: parsed.data.consultationFee?.toString(),
+
+        status: "pending",
+        verificationStatus: "pending",
+      })
+      .returning();
+    return NextResponse.json(
+      { success: true, data: provider },
+      { status: 201 },
+    );
   } catch (error) {
     console.error("POST /animals/providers", error);
-    return NextResponse.json({ success: false, message: "Unable to create provider" }, { status: 500 });
+    return NextResponse.json(
+      { success: false, message: "Unable to create provider" },
+      { status: 500 },
+    );
   }
 }

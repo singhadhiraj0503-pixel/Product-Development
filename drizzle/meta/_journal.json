@@ -15,6 +15,13 @@
       "when": 1794332430306,
       "tag": "0001_gifted_the_professor",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1794488857596,
+      "tag": "0002_optimal_the_enforcers",
+      "breakpoints": true
     }
   ]
 }

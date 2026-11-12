@@ -461,7 +461,13 @@ export function ListBusinessPage() {
                     />
                   </Field>
                   <Field label="Entity Type *">
-                    <Select value={entityType} onValueChange={setEntityType}>
+                    <Select
+                      value={entityType}
+                      // onValueChange={setEntityType}
+                      onValueChange={(value) => {
+                        if (value !== null) setEntityType(value);
+                      }}
+                    >
                       <SelectTrigger>
                         <SelectValue />
                       </SelectTrigger>
@@ -615,7 +621,10 @@ export function ListBusinessPage() {
                     <Field label="Discrepancy Category">
                       <Select
                         value={correctionCategory}
-                        onValueChange={setCorrectionCategory}
+                        // onValueChange={setCorrectionCategory}
+                        onValueChange={(value) => {
+                          if (value !== null) setCorrectionCategory(value);
+                        }}
                       >
                         <SelectTrigger>
                           <SelectValue />
@@ -635,7 +644,10 @@ export function ListBusinessPage() {
                     <Field label="Your Relationship">
                       <Select
                         value={correctionRelationship}
-                        onValueChange={setCorrectionRelationship}
+                        // onValueChange={setCorrectionRelationship}
+                        onValueChange={(value) => {
+                          if (value !== null) setCorrectionRelationship(value);
+                        }}
                       >
                         <SelectTrigger>
                           <SelectValue />
